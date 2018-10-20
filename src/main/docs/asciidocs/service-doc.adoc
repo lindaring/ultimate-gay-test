@@ -1,0 +1,71 @@
+= ultimate-gay-test
+:toc: left
+:toclevels: 1
+:sectums:
+:imagesdir: /images
+
+
+Ultimate Gay Test
+
+    A humorous gay test.
+
+== Swagger
+
+== Flow Diagram
+
+== Sequence Diagram
+
+== Database
+
+=== Entity Relationship Diagram
+image::erd.png[]
+
+=== Creation
+
+==== Database: `db_ultimate_gay_test`
+
+    CREATE DATABASE IF NOT EXISTS `db_ultimate_gay_test` DEFAULT CHARACTER SET utf8 COLLATE utf8_general_ci;
+    USE `db_ultimate_gay_test`;
+
+==== Table structure for table `tbl_answers`
+
+    CREATE TABLE `tbl_answers` (
+      `id` int(9) NOT NULL,
+      `answer` varchar(255) NOT NULL,
+      `background` varchar(255) NOT NULL,
+      `question_id` int(9) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+==== Table structure for table `tbl_questions`
+
+    CREATE TABLE `tbl_questions` (
+      `id` int(9) NOT NULL,
+      `question` varchar(255) NOT NULL,
+      `background` varchar(255) NOT NULL
+    ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
+
+==== Indexes for table `tbl_answers`
+
+    ALTER TABLE `tbl_answers`
+      ADD PRIMARY KEY (`id`),
+      ADD UNIQUE KEY `question_id` (`question_id`);
+
+==== Indexes for table `tbl_questions`
+
+    ALTER TABLE `tbl_questions`
+      ADD PRIMARY KEY (`id`);
+
+==== AUTO_INCREMENT for table `tbl_answers`
+
+    ALTER TABLE `tbl_answers`
+      MODIFY `id` int(9) NOT NULL AUTO_INCREMENT;
+
+==== AUTO_INCREMENT for table `tbl_questions`
+
+    ALTER TABLE `tbl_questions`
+      MODIFY `id` int(9) NOT NULL AUTO_INCREMENT;
+
+==== Constraints for table `tbl_answers`
+
+    ALTER TABLE `tbl_answers`
+      ADD CONSTRAINT `tbl_answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `tbl_questions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
