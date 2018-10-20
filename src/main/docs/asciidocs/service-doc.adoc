@@ -2,7 +2,7 @@
 :toc: left
 :toclevels: 1
 :sectums:
-:imagesdir: /images
+:imagesdir: images
 
 
 Ultimate Gay Test
