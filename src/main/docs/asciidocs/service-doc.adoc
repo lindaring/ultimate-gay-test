@@ -5,15 +5,19 @@
 :imagesdir: images
 
 
-Ultimate Gay Test
+The ultimate Gay Test
 
     A humorous gay test.
 
 == Swagger
+http://localhost:8181/swagger-ui.html
 
-== Flow Diagram
+== Question Rest Controller
 
-== Sequence Diagram
+=== Get Questions
+Retrieves a few random questions.
+
+operation::get_Definition_Test_Success[]
 
 == Database
 
