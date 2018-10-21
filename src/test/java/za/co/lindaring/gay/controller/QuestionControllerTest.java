@@ -1,23 +1,17 @@
-package za.co.lindaring.gay;
+package za.co.lindaring.gay.controller;
 
 import io.restassured.RestAssured;
-import io.restassured.builder.RequestSpecBuilder;
-import io.restassured.specification.RequestSpecification;
 import lombok.extern.slf4j.Slf4j;
 import org.hamcrest.Matchers;
 import org.junit.Before;
-import org.junit.Rule;
 import org.junit.Test;
 import org.junit.runner.RunWith;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
-import org.springframework.restdocs.JUnitRestDocumentation;
-import org.springframework.restdocs.operation.preprocess.Preprocessors;
-import org.springframework.restdocs.restassured3.RestAssuredRestDocumentation;
-import org.springframework.restdocs.restassured3.RestDocumentationFilter;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
+import za.co.lindaring.gay.config.CustomRestAssured;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.cli.CliDocumentation.curlRequest;
@@ -25,19 +19,12 @@ import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
 import static org.springframework.restdocs.payload.PayloadDocumentation.fieldWithPath;
 import static org.springframework.restdocs.payload.PayloadDocumentation.relaxedResponseFields;
-import static org.springframework.restdocs.restassured3.RestAssuredRestDocumentation.documentationConfiguration;
 
 @RunWith(SpringRunner.class)
 @SpringBootTest(webEnvironment = SpringBootTest.WebEnvironment.RANDOM_PORT)
 @ActiveProfiles("junit")
 @Slf4j
-public class UltimateGayTestApplicationTests {
-
-	private RequestSpecification documentationSpec;
-	private RestDocumentationFilter restDocumentationFilter;
-
-	@Rule
-	public JUnitRestDocumentation restDocumentation = new JUnitRestDocumentation();
+public class QuestionControllerTest extends CustomRestAssured {
 
 	@LocalServerPort
 	public void intPort(final int port) {
@@ -46,19 +33,14 @@ public class UltimateGayTestApplicationTests {
 
 	@Before
 	public void setUp() {
-		this.documentationSpec = new RequestSpecBuilder()
-				.addFilter(documentationConfiguration(restDocumentation))
-				.build();
-		this.restDocumentationFilter = RestAssuredRestDocumentation.document("{methodName}",
-				Preprocessors.preprocessRequest(Preprocessors.prettyPrint()),
-				Preprocessors.preprocessResponse(Preprocessors.prettyPrint())
-		);
+		super.setUp();
 	}
 
 	@Test
 	public void get_Definition_Test_Success() {
-		given(this.documentationSpec)
-			.filter(this.restDocumentationFilter.document(
+		given(spec)
+			.filter(
+				filter.document(
 					httpRequest(),
 					httpResponse(),
 					curlRequest(),
@@ -70,7 +52,7 @@ public class UltimateGayTestApplicationTests {
 							fieldWithPath("answer[].id").description("The unique answers identifier."),
 							fieldWithPath("answer[].desc").description("The answer."),
 							fieldWithPath("answer[].background").description("he background (picture) of the answer.")
-					)
+				)
 			))
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.header("Content-Type", MediaType.APPLICATION_JSON_VALUE)

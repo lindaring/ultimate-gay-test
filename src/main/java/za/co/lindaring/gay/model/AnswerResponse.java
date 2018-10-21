@@ -1,13 +1,11 @@
 package za.co.lindaring.gay.model;
 
-import lombok.AllArgsConstructor;
+import lombok.Builder;
 import lombok.Data;
-import lombok.NoArgsConstructor;
 
-@NoArgsConstructor
-@AllArgsConstructor
+@Builder
 @Data
-public class Answer {
+public class AnswerResponse {
     private int id;
     private String desc;
     private String background;

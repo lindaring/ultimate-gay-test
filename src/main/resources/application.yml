@@ -1,6 +1,21 @@
 server:
   port: 8181
 
+#mysql config
+spring:
+  datasource:
+    url: jdbc:mysql://localhost:3306/db_ultimate_gay_test
+    username: root
+    password: 211021555
+    driver-class-name: com.mysql.jdbc.Driver
+    hikari:
+      connection-timeout: 60000
+      maximum-pool-size: 5
+
+queries:
+  questions:
+    get-questions-and-answers: SELECT q.id question_id, q.question question_desc, q.background question_pic, a.id answer_id, a.answer answer_desc, a.background answer_pic
+                               FROM tbl_questions q LEFT JOIN tbl_answers a ON q.id = a.question_id
 ---
 spring:
   profiles: production

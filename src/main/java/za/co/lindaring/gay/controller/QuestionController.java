@@ -1,12 +1,15 @@
 package za.co.lindaring.gay.controller;
 
 import io.swagger.annotations.ApiOperation;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
-import org.springframework.web.bind.annotation.*;
-import za.co.lindaring.gay.model.Answer;
-import za.co.lindaring.gay.model.Question;
+import org.springframework.web.bind.annotation.CrossOrigin;
+import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RestController;
+import za.co.lindaring.gay.model.QuestionResponse;
+import za.co.lindaring.gay.service.QuestionService;
 
-import java.util.ArrayList;
 import java.util.List;
 
 @CrossOrigin
@@ -14,14 +17,13 @@ import java.util.List;
 @RequestMapping(value="/ultimate-gay-test/v1/question")
 public class QuestionController {
 
+    @Autowired
+    private QuestionService questionService;
+
     @GetMapping(value="/")
     @ApiOperation(notes="Get list of questions", value="Get list of questions")
-    public ResponseEntity<Question> getDefinition() {
-        Answer answer = new Answer(0, "Answer1", "directory1");
-        List<Answer> answerList = new ArrayList<>();
-        answerList.add(answer);
-        Question question = new Question(6, "Question1", "directory1", answerList);
-        return ResponseEntity.ok(question);
+    public ResponseEntity<List<QuestionResponse>> getDefinition() {
+        return ResponseEntity.ok(questionService.getQuestions(10));
     }
 
 }
