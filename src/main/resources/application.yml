@@ -16,13 +16,24 @@ queries:
   questions:
     get-questions-and-answers: SELECT q.id question_id, q.question question_desc, q.background question_pic, a.id answer_id, a.answer answer_desc, a.background answer_pic
                                FROM tbl_questions q LEFT JOIN tbl_answers a ON q.id = a.question_id
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+      hibernate: error
+    za:
+      co:
+        lindaring:
+          gay: debug
 ---
 spring:
   profiles: production
 
 ---
 spring:
-  profiles: development
+  profiles: local
 
 ---
 spring:

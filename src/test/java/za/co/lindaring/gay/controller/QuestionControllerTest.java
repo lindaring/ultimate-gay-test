@@ -6,12 +6,19 @@ import org.hamcrest.Matchers;
 import org.junit.Before;
 import org.junit.Test;
 import org.junit.runner.RunWith;
+import org.mockito.Mock;
+import org.mockito.Mockito;
 import org.springframework.boot.test.context.SpringBootTest;
 import org.springframework.boot.web.server.LocalServerPort;
 import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import za.co.lindaring.gay.config.CustomRestAssured;
+import za.co.lindaring.gay.repo.QuestionRepo;
+import za.co.lindaring.gay.repo.model.Question;
+
+import java.util.ArrayList;
+import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.springframework.restdocs.cli.CliDocumentation.curlRequest;
@@ -36,8 +43,16 @@ public class QuestionControllerTest extends CustomRestAssured {
 		super.setUp();
 	}
 
+	@Mock
+	private QuestionRepo questionRepo;
+
 	@Test
 	public void get_Definition_Test_Success() {
+		List<Question> questionList = new ArrayList<>();
+		questionList.add(new Question(1, "Question 1 desc", "location/1",
+				1, "Answer 1 desc", "location/2"));
+		Mockito.doReturn(questionList).when(questionRepo).findQuestions(10);
+
 		given(spec)
 			.filter(
 				filter.document(
@@ -45,13 +60,14 @@ public class QuestionControllerTest extends CustomRestAssured {
 					httpResponse(),
 					curlRequest(),
 					relaxedResponseFields(
-							fieldWithPath("id").description("The unique question identifier."),
-							fieldWithPath("desc").description("The question."),
-							fieldWithPath("background").description("The background (picture) of the question."),
-							fieldWithPath("answer[]").description("The list of possible answer."),
-							fieldWithPath("answer[].id").description("The unique answers identifier."),
-							fieldWithPath("answer[].desc").description("The answer."),
-							fieldWithPath("answer[].background").description("he background (picture) of the answer.")
+							fieldWithPath("[]").description("List of questions."),
+							fieldWithPath("[].id").description("The unique question identifier."),
+							fieldWithPath("[].desc").description("The question."),
+							fieldWithPath("[].background").description("The background (picture) of the question."),
+							fieldWithPath("[].answer[]").description("The list of possible answer."),
+							fieldWithPath("[].answer[].id").description("The unique answers identifier."),
+							fieldWithPath("[].answer[].desc").description("The answer."),
+							fieldWithPath("[].answer[].background").description("he background (picture) of the answer.")
 				)
 			))
 			.accept(MediaType.APPLICATION_JSON_VALUE)
