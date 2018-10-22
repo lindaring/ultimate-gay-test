@@ -36,7 +36,8 @@ image::erd.png[]
     CREATE TABLE `tbl_answers` (
       `id` int(9) NOT NULL,
       `answer` varchar(255) NOT NULL,
-      `background` varchar(255) NOT NULL,
+      `background` varchar(255) DEFAULT NULL,
+      `point` int(4) NOT NULL,
       `question_id` int(9) NOT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
@@ -45,14 +46,14 @@ image::erd.png[]
     CREATE TABLE `tbl_questions` (
       `id` int(9) NOT NULL,
       `question` varchar(255) NOT NULL,
-      `background` varchar(255) NOT NULL
+      `background` varchar(255) DEFAULT NULL
     ) ENGINE=InnoDB DEFAULT CHARSET=utf8;
 
 ==== Indexes for table `tbl_answers`
 
     ALTER TABLE `tbl_answers`
       ADD PRIMARY KEY (`id`),
-      ADD UNIQUE KEY `question_id` (`question_id`);
+      ADD KEY `question_id` (`question_id`);
 
 ==== Indexes for table `tbl_questions`
 
@@ -62,14 +63,14 @@ image::erd.png[]
 ==== AUTO_INCREMENT for table `tbl_answers`
 
     ALTER TABLE `tbl_answers`
-      MODIFY `id` int(9) NOT NULL AUTO_INCREMENT;
+      MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=67;
 
 ==== AUTO_INCREMENT for table `tbl_questions`
 
     ALTER TABLE `tbl_questions`
-      MODIFY `id` int(9) NOT NULL AUTO_INCREMENT;
+      MODIFY `id` int(9) NOT NULL AUTO_INCREMENT, AUTO_INCREMENT=12;
 
 ==== Constraints for table `tbl_answers`
 
     ALTER TABLE `tbl_answers`
-      ADD CONSTRAINT `tbl_answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `tbl_questions` (`id`) ON DELETE NO ACTION ON UPDATE NO ACTION;
+      ADD CONSTRAINT `tbl_answers_ibfk_1` FOREIGN KEY (`question_id`) REFERENCES `tbl_questions` (`id`);
