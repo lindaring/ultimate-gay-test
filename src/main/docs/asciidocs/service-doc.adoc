@@ -9,6 +9,9 @@ The ultimate Gay Test
 
     A humorous gay test.
 
+== Flowchart
+image:flowchart.png[]
+
 == Swagger
 http://localhost:8181/swagger-ui.html
 

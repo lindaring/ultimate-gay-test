@@ -1,0 +1,41 @@
+@startuml
+start
+
+    partition "Step 1" {
+
+        #lightblue:**user:** Enter website;
+
+        #orange:Load questions and answers.
+        ====
+        **GET** ultimate-gay-test/v1/question;
+
+    }
+
+    if (Questions and answers loaded) then (Success)
+
+        #pink:Display questions and answers;
+
+        partition "Step 2" {
+
+            #lightblue:**user:** Select answer;
+
+            #orange:Submit selected answers.
+            ====
+            **POST** ultimate-gay-test/v1/question;
+
+        }
+
+        if (Submission processed successfully) then (Success)
+
+            #pink:Display results;
+
+        else (Failed)
+            stop
+        endif
+
+    else (Failed)
+        stop
+    endif
+
+stop
+@enduml
