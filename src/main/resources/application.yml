@@ -21,12 +21,12 @@ logging:
   level:
     org:
       springframework:
-        web: debug
+        web: info
       hibernate: error
     za:
       co:
         lindaring:
-          gay: debug
+          gay: info
 ---
 spring:
   profiles: production
@@ -38,3 +38,14 @@ spring:
 ---
 spring:
   profiles: junit
+
+logging:
+  level:
+    org:
+      springframework:
+        web: debug
+      hibernate: error
+    za:
+      co:
+        lindaring:
+          gay: debug
