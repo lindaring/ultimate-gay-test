@@ -24,7 +24,8 @@ public class SwaggerConfig {
 
     private Predicate<String> postPaths() {
         return or(
-                regex("/ultimate-gay-test/v1/question.*")
+                regex("/ultimate-gay-test/v1/question.*"),
+                regex("/ultimate-gay-test/v1/answer.*")
         );
     }
 

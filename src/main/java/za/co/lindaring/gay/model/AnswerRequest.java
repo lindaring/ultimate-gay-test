@@ -5,8 +5,6 @@ import lombok.Data;
 
 @Builder
 @Data
-public class AnswerResponse {
+public class AnswerRequest {
     private int answerId;
-    private String answerDesc;
-    private String answerPic;
 }

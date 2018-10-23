@@ -11,9 +11,6 @@ import java.util.List;
 @NoArgsConstructor
 @Builder
 @Data
-public class QuestionResponse {
-    private int questionId;
-    private String questionDesc;
-    private String questionPic;
-    private List<AnswerResponse> answersList;
+public class GetQuestionsReponse {
+    private List<QuestionResponse> questionsList;
 }

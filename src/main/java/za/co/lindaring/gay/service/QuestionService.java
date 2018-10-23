@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
 import za.co.lindaring.gay.model.AnswerResponse;
+import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.model.QuestionResponse;
 import za.co.lindaring.gay.repo.QuestionRepo;
 import za.co.lindaring.gay.repo.model.Question;
@@ -24,12 +25,12 @@ public class QuestionService {
      * @param limit max questions that must be returned.
      * @return list of questions.
      */
-    public List<QuestionResponse> getQuestions(int limit) {
+    public GetQuestionsReponse getQuestions(int limit) {
         List<Question> questionAnswerList = questionRepo.findQuestions(limit);
         log.debug("getQuestion :: questionList :: size={}", questionAnswerList.size());
 
         if (questionAnswerList.isEmpty())
-            return Collections.singletonList(new QuestionResponse());
+            return new GetQuestionsReponse(Collections.singletonList(new QuestionResponse()));
 
         List<QuestionResponse> questionResponseList = new ArrayList<>();
 
@@ -46,41 +47,42 @@ public class QuestionService {
         });
 
         log.debug("getQuestion :: mapped question={}", questionResponseList);
-        return questionResponseList;
+        return new GetQuestionsReponse(questionResponseList);
     }
 
     private AnswerResponse initAnswerResponse(Question question) {
         if (!StringUtils.isEmpty(question.getAnswerDesc())) {
             log.debug("initAnswerResponse :: {} No answer found.", question);
             return AnswerResponse.builder()
-                    .id(question.getAnswerId())
-                    .desc(question.getAnswerDesc())
-                    .background(question.getAnswerBackground())
+                    .answerId(question.getAnswerId())
+                    .answerDesc(question.getAnswerDesc())
+                    .answerPic(question.getAnswerBackground())
                     .build();
         }
         return null;
     }
 
     private Optional<QuestionResponse> getItemFromList(List<QuestionResponse> questionResponseList, int elementId) {
-        return questionResponseList.stream().filter(x -> x.getId() == elementId).findFirst();
+        return questionResponseList.stream().filter(x -> x.getQuestionId() == elementId).findFirst();
     }
 
     private void addAnswerToList(QuestionResponse questionResponse, AnswerResponse answerResponse) {
-        log.debug("addAnswerToList :: Found in list. Adding answer {}...", questionResponse.getAnswer());
-        List<AnswerResponse> answerResponseList = questionResponse.getAnswer();
-        answerResponseList.add(answerResponse);
+        log.debug("addAnswerToList :: Found in list. Adding answer {}...", questionResponse.getAnswersList());
+        questionResponse.getAnswersList().add(answerResponse);
     }
 
     private void addQuestionToList(List<QuestionResponse> questionResponseList, Question question, AnswerResponse answerResponse) {
         log.debug("addQuestionToList :: {} not found in list. Creating new...", question);
         List<AnswerResponse> answerResponseList = new ArrayList<>();
         answerResponseList.add(answerResponse);
+
         QuestionResponse questionResponse = QuestionResponse.builder()
-                .id(question.getQuestionId())
-                .desc(question.getQuestionDesc())
-                .background(question.getQuestionBackground())
-                .answer(answerResponse != null ? answerResponseList : null)
+                .questionId(question.getQuestionId())
+                .questionDesc(question.getQuestionDesc())
+                .questionPic(question.getQuestionBackground())
+                .answersList(answerResponse != null ? answerResponseList : null)
                 .build();
+
         questionResponseList.add(questionResponse);
     }
 

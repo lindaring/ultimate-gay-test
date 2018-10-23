@@ -11,4 +11,7 @@ public class SqlProperties {
     @Value("${queries.questions.get-questions-and-answers}")
     private String getQuestionsAndAnswers;
 
+    @Value("${queries.users.insert-user-score}")
+    private String insertUserScore;
+
 }

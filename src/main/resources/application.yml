@@ -16,6 +16,13 @@ queries:
   questions:
     get-questions-and-answers: SELECT q.id question_id, q.question question_desc, q.background question_pic, a.id answer_id, a.answer answer_desc, a.background answer_pic
                                FROM tbl_questions q LEFT JOIN tbl_answers a ON q.id = a.question_id
+  users:
+    insert-user-score: INSERT INTO `tbl_visitors` (`name`, `ip`, `user_agent`, `score`)
+                       VALUES (?, ?, ?, ?);
+
+messages:
+  user:
+    updateFailed: Failed to submit your score.
 
 logging:
   level:

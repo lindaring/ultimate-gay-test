@@ -60,14 +60,14 @@ public class QuestionControllerTest extends CustomRestAssured {
 					httpResponse(),
 					curlRequest(),
 					relaxedResponseFields(
-							fieldWithPath("[]").description("List of questions."),
-							fieldWithPath("[].id").description("The unique question identifier."),
-							fieldWithPath("[].desc").description("The question."),
-							fieldWithPath("[].background").description("The background (picture) of the question."),
-							fieldWithPath("[].answer[]").description("The list of possible answer."),
-							fieldWithPath("[].answer[].id").description("The unique answers identifier."),
-							fieldWithPath("[].answer[].desc").description("The answer."),
-							fieldWithPath("[].answer[].background").description("he background (picture) of the answer.")
+						fieldWithPath("questionsList[]").description("List of questions."),
+						fieldWithPath("questionsList[].questionId").description("The unique question identifier."),
+						fieldWithPath("questionsList[].questionDesc").description("The question."),
+						fieldWithPath("questionsList[].questionPic").description("The background (picture) of the question."),
+						fieldWithPath("questionsList[].answersList[]").description("The list of possible answer."),
+						fieldWithPath("questionsList[].answersList[].answerId").description("The unique answers identifier."),
+						fieldWithPath("questionsList[].answersList[].answerDesc").description("The answer."),
+						fieldWithPath("questionsList[].answersList[].answerPic").description("The background (picture) of the answer.")
 				)
 			))
 			.accept(MediaType.APPLICATION_JSON_VALUE)
@@ -76,11 +76,11 @@ public class QuestionControllerTest extends CustomRestAssured {
 			.then()
 			.log().all()
 			.assertThat()
-			.body("desc", Matchers.notNullValue())
+			.body("questionsList[0].questionDesc", Matchers.notNullValue())
 			.and()
-			.body("background", Matchers.notNullValue())
+			.body("questionsList[0].questionDesc", Matchers.notNullValue())
 			.and()
-			.body("answer", Matchers.notNullValue())
+			.body("questionsList[0].answersList", Matchers.notNullValue())
 			.and()
 			.statusCode(200);
 	}
