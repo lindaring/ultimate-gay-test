@@ -9,7 +9,10 @@ import org.springframework.stereotype.Component;
 public class SqlProperties {
 
     @Value("${queries.questions.get-questions-and-answers}")
-    private String getQuestionsAndAnswers;
+    private String questionsAndAnswers;
+
+    @Value("${queries.answer.get-all-answers}")
+    private String allAnswers;
 
     @Value("${queries.users.insert-user-score}")
     private String insertUserScore;

@@ -13,5 +13,5 @@ import java.util.List;
 @Data
 public class PostAnwersRequest {
     private String name;
-    private List<QuestionRequest> questionsList;
+    private List<AnswerRequest> answerList;
 }

@@ -18,7 +18,7 @@ public class QuestionRepo {
     private SqlProperties sqlProperties;
 
     public List<Question> findQuestions(int limit) {
-        String sql = String.format(sqlProperties.getGetQuestionsAndAnswers(), limit);
+        String sql = String.format(sqlProperties.getQuestionsAndAnswers(), limit);
         return jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> Question.builder()
@@ -31,4 +31,5 @@ public class QuestionRepo {
                                         .build()
         );
     }
+
 }

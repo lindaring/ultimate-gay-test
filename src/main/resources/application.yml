@@ -19,6 +19,8 @@ queries:
   users:
     insert-user-score: INSERT INTO `tbl_visitors` (`name`, `ip`, `user_agent`, `score`)
                        VALUES (?, ?, ?, ?);
+  answer:
+    get-all-answers: SELECT * FROM `tbl_answers`
 
 messages:
   user:

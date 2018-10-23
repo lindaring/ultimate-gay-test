@@ -6,5 +6,6 @@ import lombok.Data;
 @Builder
 @Data
 public class AnswerRequest {
+    private int questionId;
     private int answerId;
 }

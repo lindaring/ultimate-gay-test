@@ -22,9 +22,9 @@ public class AnswerController {
     @PostMapping(value="/")
     @ApiOperation(notes="Submit answers", value="Submit answers")
     public ResponseEntity<GeneralResponse> getDefinition(HttpServletRequest httpServletRequest,
-                                                         @RequestBody PostAnwersRequest anwersRequest)
+                                                         @RequestBody PostAnwersRequest answersRequest)
             throws DatabaseException {
-        return ResponseEntity.ok(answerService.submitAnwers(httpServletRequest, anwersRequest));
+        return ResponseEntity.ok(answerService.submitAnswers(httpServletRequest, answersRequest));
     }
 
 }
