@@ -7,4 +7,5 @@ import lombok.Data;
 @Data
 public class GeneralResponse {
     private boolean success;
+    private long id;
 }

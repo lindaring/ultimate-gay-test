@@ -2,6 +2,7 @@ package za.co.lindaring.gay.service;
 
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.dao.DataAccessException;
 import org.springframework.stereotype.Service;
 import za.co.lindaring.gay.exception.DatabaseException;
 import za.co.lindaring.gay.model.AnswerRequest;
@@ -35,23 +36,19 @@ public class AnswerService {
         String userAgent = GeneralUtils.getUserAgent(httpServletRequest);
 
         int score = calculateScore(answersRequest.getAnswerList());
-        userService.saveUserScore(new User(0, answersRequest.getName(), ip, userAgent, score));
+        long userId = userService.saveUserScore(new User(0, answersRequest.getName(), ip, userAgent, score));
 
         return GeneralResponse.builder()
                 .success(true)
+                .id(userId)
                 .build();
     }
 
-    private int calculateScore(List<AnswerRequest> answerList) throws DatabaseException {
-        try {
+    private int calculateScore(List<AnswerRequest> answerList) {
             List<Answer> result = answerRepo.findAnswers(answerList);
             int total = result.stream().mapToInt(Answer::getPoint).sum();
             log.debug("{} :: calculateScore() :: {}", getClass(), total);
             return total;
-        } catch (Exception e) {
-            log.error("{} :: calculateScore() :: Database select failed. :: {}", getClass(), e.getMessage());
-            throw new DatabaseException(messages.getUpdateFailedMsg());
-        }
     }
 
 }

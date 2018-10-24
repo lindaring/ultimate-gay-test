@@ -108,12 +108,24 @@ public class QuestionControllerTest extends CustomRestAssured {
 		answerList.add(new Answer(2, "Nothing", "", 7, 4));
 
 		Mockito.doReturn(answerList).when(answerRepo).findAnswers(anyList());
-		Mockito.doReturn(1).when(userRepo).addUserAndScore(any(User.class));
+		Mockito.doReturn(100L).when(userRepo).addUserAndScore(any(User.class));
 
 		List<AnswerRequest> answerRequestList = new ArrayList<>();
-		answerRequestList.add(new AnswerRequest(1, 3));
+		answerRequestList.add(new AnswerRequest(1, 5));
+		answerRequestList.add(new AnswerRequest(2, 4));
 
-		given()
+
+		given(spec)
+			.filter(
+			filter.document(
+				httpRequest(),
+				httpResponse(),
+				curlRequest(),
+				relaxedResponseFields(
+					fieldWithPath("success").description("Returns true is successful, otherwise throws and exception."),
+					fieldWithPath("id").description("The user id.")
+				)
+			))
 			.accept(MediaType.APPLICATION_JSON_VALUE)
 			.header("Content-Type", MediaType.APPLICATION_JSON_VALUE)
 			.body(new PostAnwersRequest("Thando", answerRequestList))
@@ -123,6 +135,7 @@ public class QuestionControllerTest extends CustomRestAssured {
 			.assertThat()
 			.body("success", is(true))
 			.and()
+			.body("id", is(100))
 			.statusCode(200);
 	}
 

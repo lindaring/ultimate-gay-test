@@ -18,17 +18,19 @@ public class UserService {
     @Autowired
     private MessageProperties messages;
 
-    public void saveUserScore(User user) throws DatabaseException {
-        try {
-            int saved = userRepo.addUserAndScore(user);
-            if (saved < 1) {
-                log.error("{} :: saveUserScore({}) :: No rows inserted.", getClass(), user);
-                throw new DatabaseException(messages.getUpdateFailedMsg());
-            }
-        } catch (Exception e) {
-            log.error("{} :: saveUserScore({}) :: Database insert failed.", getClass(), user);
+    /**
+     * Save user results.
+     * @param user the user details.
+     * @return the user id.
+     * @throws DatabaseException if the insertion fails.
+     */
+    public long saveUserScore(User user) throws DatabaseException {
+        long userId = userRepo.addUserAndScore(user);
+        if (userId < 1) {
+            log.error("{} :: saveUserScore({}) :: No rows inserted.", getClass(), user);
             throw new DatabaseException(messages.getUpdateFailedMsg());
         }
         log.debug("{} saved successfully.", user);
+        return userId;
     }
 }
