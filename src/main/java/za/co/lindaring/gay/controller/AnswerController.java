@@ -5,6 +5,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
 import za.co.lindaring.gay.exception.DatabaseException;
+import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.model.GeneralResponse;
 import za.co.lindaring.gay.model.PostAnwersRequest;
 import za.co.lindaring.gay.service.AnswerService;
@@ -23,7 +24,7 @@ public class AnswerController {
     @ApiOperation(notes="Submit answers", value="Submit answers")
     public ResponseEntity<GeneralResponse> getDefinition(HttpServletRequest httpServletRequest,
                                                          @RequestBody PostAnwersRequest answersRequest)
-            throws DatabaseException {
+            throws TechnicalException {
         return ResponseEntity.ok(answerService.submitAnswers(httpServletRequest, answersRequest));
     }
 

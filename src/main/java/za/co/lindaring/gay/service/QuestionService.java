@@ -4,6 +4,8 @@ import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.util.StringUtils;
+import za.co.lindaring.gay.exception.QuestionNotFoundException;
+import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.model.AnswerResponse;
 import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.model.QuestionResponse;
@@ -11,7 +13,6 @@ import za.co.lindaring.gay.repo.QuestionRepo;
 import za.co.lindaring.gay.repo.model.Question;
 
 import java.util.ArrayList;
-import java.util.Collections;
 import java.util.List;
 import java.util.Optional;
 
@@ -28,29 +29,38 @@ public class QuestionService {
      * @param limit max questions that must be returned.
      * @return list of questions.
      */
-    public GetQuestionsReponse getQuestions(int limit) {
-        List<Question> questionAnswerList = questionRepo.findQuestions(limit);
-        log.debug("getQuestion :: questionList :: size={}", questionAnswerList.size());
+    public GetQuestionsReponse getQuestions(int limit) throws QuestionNotFoundException, TechnicalException {
+        try {
+            List<Question> questionAnswerList = questionRepo.findQuestions(limit);
+            log.debug("getQuestion :: questionList :: size={}", questionAnswerList.size());
 
-        if (questionAnswerList.isEmpty())
-            return new GetQuestionsReponse(Collections.singletonList(new QuestionResponse()));
+            if (questionAnswerList.isEmpty())
+                throw new QuestionNotFoundException();
 
-        List<QuestionResponse> questionResponseList = new ArrayList<>();
+            List<QuestionResponse> questionResponseList = new ArrayList<>();
 
-        questionAnswerList.forEach(x -> {
-            log.debug("getQuestion :: question={}", x);
-            Optional<QuestionResponse> questionResponseOptional = getItemFromList(questionResponseList, x.getQuestionId());
-            AnswerResponse answerResponse = initAnswerResponse(x);
+            questionAnswerList.forEach(x -> {
+                log.debug("getQuestion :: question={}", x);
+                Optional<QuestionResponse> questionResponseOptional = getItemFromList(questionResponseList, x.getQuestionId());
+                AnswerResponse answerResponse = initAnswerResponse(x);
 
-            if (answerResponse != null && questionResponseOptional.isPresent()) {
-                addAnswerToList(questionResponseOptional.get(), answerResponse);
-            } else {
-                addQuestionToList(questionResponseList, x, answerResponse);
-            }
-        });
+                if (answerResponse != null && questionResponseOptional.isPresent()) {
+                    addAnswerToList(questionResponseOptional.get(), answerResponse);
+                } else {
+                    addQuestionToList(questionResponseList, x, answerResponse);
+                }
+            });
 
-        log.debug("getQuestion :: mapped question={}", questionResponseList);
-        return new GetQuestionsReponse(questionResponseList);
+            log.debug("getQuestion :: mapped question={}", questionResponseList);
+            return new GetQuestionsReponse(questionResponseList);
+
+        } catch (QuestionNotFoundException e) {
+            throw e;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new TechnicalException();
+        }
     }
 
     private AnswerResponse initAnswerResponse(Question question) {

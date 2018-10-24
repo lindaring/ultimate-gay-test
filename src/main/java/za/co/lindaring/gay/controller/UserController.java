@@ -6,6 +6,8 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
 import org.springframework.web.bind.annotation.*;
+import za.co.lindaring.gay.exception.TechnicalException;
+import za.co.lindaring.gay.exception.UserNotFoundException;
 import za.co.lindaring.gay.model.GetUserResponse;
 import za.co.lindaring.gay.service.UserService;
 
@@ -20,7 +22,7 @@ public class UserController {
     @GetMapping(value="/{id}")
     @ApiOperation(notes="Get specific user", value="Get specific user")
     public ResponseEntity<GetUserResponse> getUser(
-            @ApiParam(value="User ID", required=true) @PathVariable int id) {
+            @ApiParam(value="User ID", required=true) @PathVariable int id) throws TechnicalException, UserNotFoundException {
         GetUserResponse user = userService.getUser(id);
         if (user != null)
             return ResponseEntity.ok(user);

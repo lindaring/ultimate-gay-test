@@ -9,7 +9,7 @@ spring:
     password: 211021555
     driver-class-name: com.mysql.jdbc.Driver
     hikari:
-      connection-timeout: 60000
+      connection-timeout: 10000
       maximum-pool-size: 5
 
 queries:

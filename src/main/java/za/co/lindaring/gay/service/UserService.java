@@ -3,7 +3,8 @@ package za.co.lindaring.gay.service;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
-import za.co.lindaring.gay.exception.DatabaseException;
+import za.co.lindaring.gay.exception.TechnicalException;
+import za.co.lindaring.gay.exception.UserNotFoundException;
 import za.co.lindaring.gay.model.GetUserResponse;
 import za.co.lindaring.gay.prop.MessageProperties;
 import za.co.lindaring.gay.repo.UserRepo;
@@ -25,13 +26,13 @@ public class UserService {
      * Save user results.
      * @param user the user details.
      * @return the user id.
-     * @throws DatabaseException if the insertion fails.
+     * @throws TechnicalException if the insertion fails.
      */
-    public long saveUserScore(User user) throws DatabaseException {
+    long saveUserScore(User user) throws TechnicalException {
         long userId = userRepo.addUserAndScore(user);
         if (userId < 1) {
             log.error("{} :: saveUserScore({}) :: No rows inserted.", getClass(), user);
-            throw new DatabaseException(messages.getUpdateFailedMsg());
+            throw new TechnicalException();
         }
         log.debug("{} saved successfully.", user);
         return userId;
@@ -41,20 +42,31 @@ public class UserService {
      * Get a specific user.
      * @param id the user id.
      * @return the user, otherwise return null.
+     * @throws UserNotFoundException if user not found in database.
+     * @throws TechnicalException for any other failures.
      */
-    public GetUserResponse getUser(int id) {
-        List<User> userList = userRepo.findUser(id);
-        log.debug("{} saved successfully.", userList.size());
-        User user = userList.stream().findFirst().orElse(null);
+    public GetUserResponse getUser(int id) throws TechnicalException, UserNotFoundException {
+        try {
+            List<User> userList = userRepo.findUser(id);
+            log.debug("{} saved successfully.", userList.size());
+            User user = userList.stream().findFirst().orElse(null);
 
-        if (user == null)
-            return null;
+            if (user == null)
+                throw new UserNotFoundException();
 
-        return GetUserResponse.builder()
-                .id(user.getId())
-                .name(user.getName())
-                .score(user.getScore())
-                .visited(user.getVisited().toLocalDateTime().toLocalDate())
-                .build();
+            return GetUserResponse.builder()
+                    .id(user.getId())
+                    .name(user.getName())
+                    .score(user.getScore())
+                    .visited(user.getVisited().toLocalDateTime().toLocalDate())
+                    .build();
+
+        } catch (UserNotFoundException e)  {
+            throw e;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new TechnicalException();
+        }
     }
 }

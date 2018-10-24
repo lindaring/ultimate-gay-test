@@ -7,6 +7,8 @@ import org.springframework.web.bind.annotation.CrossOrigin;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
+import za.co.lindaring.gay.exception.QuestionNotFoundException;
+import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.service.QuestionService;
 
@@ -20,7 +22,8 @@ public class QuestionController {
 
     @GetMapping(value="/")
     @ApiOperation(notes="Get list of questions", value="Get list of questions")
-    public ResponseEntity<GetQuestionsReponse> getDefinition() {
+    public ResponseEntity<GetQuestionsReponse> getDefinition()
+            throws QuestionNotFoundException, TechnicalException {
         return ResponseEntity.ok(questionService.getQuestions(10));
     }
 
