@@ -17,8 +17,9 @@ queries:
     get-questions-and-answers: SELECT q.id question_id, q.question question_desc, q.background question_pic, a.id answer_id, a.answer answer_desc, a.background answer_pic
                                FROM tbl_questions q LEFT JOIN tbl_answers a ON q.id = a.question_id
   users:
-    insert-user-score: INSERT INTO `tbl_visitors` (`name`, `ip`, `user_agent`, `score`)
-                       VALUES (?, ?, ?, ?);
+    insert-user-score: INSERT INTO tbl_visitors (name, ip, user_agent, score) VALUES (?, ?, ?, ?)
+    get-users: SELECT id, name, ip, user_agent, score, visited FROM tbl_visitors ORDER BY visited DESC
+    get-specific-user: SELECT id, name, ip, user_agent, score, visited FROM tbl_visitors WHERE id = ?
   answer:
     get-all-answers: SELECT * FROM `tbl_answers`
 

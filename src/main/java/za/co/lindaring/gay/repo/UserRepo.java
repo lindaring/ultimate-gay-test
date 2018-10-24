@@ -10,6 +10,7 @@ import za.co.lindaring.gay.repo.model.User;
 
 import java.sql.PreparedStatement;
 import java.sql.Statement;
+import java.util.List;
 
 @Repository
 public class UserRepo {
@@ -33,6 +34,21 @@ public class UserRepo {
         }, keyHolder);
 
         return (long) keyHolder.getKey();
+    }
+
+    public List<User> findUser(int id) {
+        return jdbcTemplate.query(
+            sqlProperties.getUser(),
+            (rs, rowNum) -> User.builder()
+                    .id(rs.getInt("id"))
+                    .name(rs.getString("name"))
+                    .ip(rs.getString("ip"))
+                    .userAgent(rs.getString("user_agent"))
+                    .score(rs.getInt("score"))
+                    .visited(rs.getTimestamp("visited"))
+                    .build(),
+                id
+        );
     }
 
 }

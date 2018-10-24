@@ -35,7 +35,7 @@ public class AnswerService {
         String userAgent = GeneralUtils.getUserAgent(httpServletRequest);
 
         int score = calculateScore(answersRequest.getAnswerList());
-        long userId = userService.saveUserScore(new User(0, answersRequest.getName(), ip, userAgent, score));
+        long userId = userService.saveUserScore(new User(0, answersRequest.getName(), ip, userAgent, score, null));
 
         return GeneralResponse.builder()
                 .success(true)

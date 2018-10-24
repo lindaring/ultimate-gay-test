@@ -14,6 +14,12 @@ public class SqlProperties {
     @Value("${queries.answer.get-all-answers}")
     private String allAnswers;
 
+    @Value("${queries.users.get-specific-user}")
+    private String user;
+
+    @Value("${queries.users.get-users}")
+    private String allUsers;
+
     @Value("${queries.users.insert-user-score}")
     private String insertUserScore;
 

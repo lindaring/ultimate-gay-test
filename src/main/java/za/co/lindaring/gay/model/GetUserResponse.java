@@ -1,21 +1,19 @@
-package za.co.lindaring.gay.repo.model;
+package za.co.lindaring.gay.model;
 
 import lombok.AllArgsConstructor;
 import lombok.Builder;
 import lombok.Data;
 import lombok.NoArgsConstructor;
 
-import java.sql.Timestamp;
+import java.time.LocalDate;
 
 @NoArgsConstructor
 @AllArgsConstructor
 @Builder
 @Data
-public class User {
+public class GetUserResponse {
     private int id;
     private String name;
-    private String ip;
-    private String userAgent;
     private int score;
-    private Timestamp visited;
+    private LocalDate visited;
 }
