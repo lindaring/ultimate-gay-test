@@ -1,6 +1,6 @@
 = ultimate-gay-test
 :toc: left
-:toclevels: 1
+:toclevels: 2
 :sectums:
 :imagesdir: images
 
@@ -21,6 +21,11 @@ http://localhost:8181/swagger-ui.html
 Retrieves a few random questions.
 
 operation::get_Definition_Test_Success[]
+
+=== Submit Answers
+Submit the users answers.
+
+operation::submit_Answer_Test_Success[]
 
 == Database
 

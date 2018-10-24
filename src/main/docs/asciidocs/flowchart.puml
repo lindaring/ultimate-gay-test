@@ -1,41 +1,61 @@
 @startuml
 start
 
-    partition "Step 1" {
+    repeat
+        repeat
+            repeat
+                repeat
+                    partition "Step 1" {
 
-        #lightblue:**user:** Enter website;
+                        #lightblue:**user:** Enter website;
 
-        #orange:Load questions and answers.
-        ====
-        **GET** ultimate-gay-test/v1/question;
+                        #orange:Load questions and answers.
+                        ====
+                        **GET** ultimate-gay-test/v1/question;
 
-    }
+                    }
+                repeat while (Questions and answers loaded) is (Failed)
 
-    if (Questions and answers loaded) then (Success)
+                #pink:Display questions and answers;
 
-        #pink:Display questions and answers;
+                partition "Step 2" {
 
-        partition "Step 2" {
+                    #lightblue:**user:** Enter name\nand Select answers;
 
-            #lightblue:**user:** Select answer;
+                    #orange:Submit selected answers.
+                    ====
+                    **POST** ultimate-gay-test/v1/question;
 
-            #orange:Submit selected answers.
+                }
+
+            repeat while (Submission processed) is (Failed)
+
+            partition "Step 3" {
+
+                #lightblue:**page:** Load user results;
+
+                #orange:Load user results.
+                ====
+                **GET** ultimate-gay-test/v1/user/{id};
+            }
+
+        repeat while (Results loaded) is (Failed)
+
+        #pink:Display results;
+
+        partition "Step 4 (Optional)" {
+
+            #lightblue:**page:** Load all users;
+
+            #orange:Load all users.
             ====
-            **POST** ultimate-gay-test/v1/question;
-
+            **GET** ultimate-gay-test/v1/user/all;
         }
 
-        if (Submission processed successfully) then (Success)
+    repeat while (Results loaded) is (Failed)
 
-            #pink:Display results;
+    #pink:Display results;
 
-        else (Failed)
-            stop
-        endif
-
-    else (Failed)
-        stop
-    endif
 
 stop
 @enduml
