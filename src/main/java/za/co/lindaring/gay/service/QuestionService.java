@@ -10,7 +10,10 @@ import za.co.lindaring.gay.model.QuestionResponse;
 import za.co.lindaring.gay.repo.QuestionRepo;
 import za.co.lindaring.gay.repo.model.Question;
 
-import java.util.*;
+import java.util.ArrayList;
+import java.util.Collections;
+import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
