@@ -6,7 +6,7 @@ import lombok.Data;
 @Builder
 @Data
 public class AnswerResponse {
-    private int answerId;
-    private String answerDesc;
-    private String answerPic;
+    private int id;
+    private String desc;
+    private String pic;
 }

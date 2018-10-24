@@ -12,8 +12,8 @@ import java.util.List;
 @Builder
 @Data
 public class QuestionResponse {
-    private int questionId;
-    private String questionDesc;
-    private String questionPic;
+    private int id;
+    private String desc;
+    private String pic;
     private List<AnswerResponse> answersList;
 }

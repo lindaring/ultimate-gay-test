@@ -54,16 +54,16 @@ public class QuestionService {
         if (!StringUtils.isEmpty(question.getAnswerDesc())) {
             log.debug("initAnswerResponse :: {} No answer found.", question);
             return AnswerResponse.builder()
-                    .answerId(question.getAnswerId())
-                    .answerDesc(question.getAnswerDesc())
-                    .answerPic(question.getAnswerBackground())
+                    .id(question.getAnswerId())
+                    .desc(question.getAnswerDesc())
+                    .pic(question.getAnswerBackground())
                     .build();
         }
         return null;
     }
 
     private Optional<QuestionResponse> getItemFromList(List<QuestionResponse> questionResponseList, int elementId) {
-        return questionResponseList.stream().filter(x -> x.getQuestionId() == elementId).findFirst();
+        return questionResponseList.stream().filter(x -> x.getId() == elementId).findFirst();
     }
 
     private void addAnswerToList(QuestionResponse questionResponse, AnswerResponse answerResponse) {
@@ -77,9 +77,9 @@ public class QuestionService {
         answerResponseList.add(answerResponse);
 
         QuestionResponse questionResponse = QuestionResponse.builder()
-                .questionId(question.getQuestionId())
-                .questionDesc(question.getQuestionDesc())
-                .questionPic(question.getQuestionBackground())
+                .id(question.getQuestionId())
+                .desc(question.getQuestionDesc())
+                .pic(question.getQuestionBackground())
                 .answersList(answerResponse != null ? answerResponseList : null)
                 .build();
 
