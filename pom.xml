@@ -68,6 +68,18 @@
 			</exclusions>
 		</dependency>
 
+		<!-- Caching -->
+		<dependency>
+			<groupId>org.springframework</groupId>
+			<artifactId>spring-context-support</artifactId>
+			<version>4.3.20.RELEASE</version>
+		</dependency>
+		<dependency>
+			<groupId>com.google.guava</groupId>
+			<artifactId>guava</artifactId>
+			<version>18.0</version>
+		</dependency>
+
 		<!-- Unit Test & Docs -->
 		<dependency>
 			<groupId>org.springframework.boot</groupId>

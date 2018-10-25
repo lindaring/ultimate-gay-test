@@ -7,22 +7,24 @@ import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.exception.UserNotFoundException;
 import za.co.lindaring.gay.model.GetAllUsersResponse;
 import za.co.lindaring.gay.model.GetUserResponse;
-import za.co.lindaring.gay.prop.MessageProperties;
 import za.co.lindaring.gay.repo.UserRepo;
 import za.co.lindaring.gay.repo.model.User;
 
 import java.util.ArrayList;
 import java.util.List;
+import java.util.Optional;
 
 @Slf4j
 @Service
 public class UserService {
 
+    private final String ALL_STARS = "ALL_STARS";
+
     @Autowired
     private UserRepo userRepo;
 
     @Autowired
-    private MessageProperties messages;
+    private CacheService cacheService;
 
     /**
      * Save user results.
@@ -80,6 +82,12 @@ public class UserService {
      */
     public GetAllUsersResponse getAllUsers() throws TechnicalException, UserNotFoundException {
         try {
+            Optional<GetAllUsersResponse> responseOptional = cacheService.getUsers(ALL_STARS);
+            if (responseOptional.isPresent()) {
+                log.debug("Users retrieved from cache.");
+                return responseOptional.get();
+            }
+
             List<User> userList = userRepo.findAllUsers();
             log.debug("{} users retrieved array size.", userList.size());
 
@@ -96,7 +104,10 @@ public class UserService {
                             .visited(x.getVisited().toLocalDateTime().toLocalDate())
                             .build())
             );
-            return new GetAllUsersResponse(userResponseList);
+
+            GetAllUsersResponse response = new GetAllUsersResponse(userResponseList);
+            cacheService.putUsers(ALL_STARS, response);
+            return response;
 
         } catch (UserNotFoundException e)  {
             throw e;

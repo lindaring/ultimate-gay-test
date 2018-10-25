@@ -7,6 +7,7 @@ import org.springframework.util.StringUtils;
 import za.co.lindaring.gay.exception.QuestionNotFoundException;
 import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.model.AnswerResponse;
+import za.co.lindaring.gay.model.GetAllUsersResponse;
 import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.model.QuestionResponse;
 import za.co.lindaring.gay.repo.QuestionRepo;
@@ -20,8 +21,13 @@ import java.util.Optional;
 @Service
 public class QuestionService {
 
+    private final String ALL_QUESTIONS = "ALL_QUESTIONS";
+
     @Autowired
     private QuestionRepo questionRepo;
+
+    @Autowired
+    private CacheService cacheService;
 
     /**
      * Get a list of questions and related answers.
@@ -31,6 +37,12 @@ public class QuestionService {
      */
     public GetQuestionsReponse getQuestions(int limit) throws QuestionNotFoundException, TechnicalException {
         try {
+            Optional<GetQuestionsReponse> responseOptional = cacheService.getQuestions(ALL_QUESTIONS);
+            if (responseOptional.isPresent()) {
+                log.debug("Questions retrieved from cache.");
+                return responseOptional.get();
+            }
+
             List<Question> questionAnswerList = questionRepo.findQuestions(limit);
             log.debug("getQuestion :: questionList :: size={}", questionAnswerList.size());
 
@@ -51,8 +63,10 @@ public class QuestionService {
                 }
             });
 
+            GetQuestionsReponse response = new GetQuestionsReponse(questionResponseList);
+            cacheService.putQuestions(ALL_QUESTIONS, response);
             log.debug("getQuestion :: mapped question={}", questionResponseList);
-            return new GetQuestionsReponse(questionResponseList);
+            return response;
 
         } catch (QuestionNotFoundException e) {
             throw e;
