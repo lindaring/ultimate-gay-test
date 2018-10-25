@@ -13,9 +13,12 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import za.co.lindaring.gay.config.CustomRestAssured;
+import za.co.lindaring.gay.model.GetAllUsersResponse;
+import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.model.PostAnwersRequest;
 import za.co.lindaring.gay.repo.UserRepo;
 import za.co.lindaring.gay.repo.model.User;
+import za.co.lindaring.gay.service.CacheService;
 
 import java.sql.Timestamp;
 import java.util.ArrayList;
@@ -23,7 +26,9 @@ import java.util.List;
 
 import static io.restassured.RestAssured.given;
 import static org.hamcrest.Matchers.is;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.restdocs.cli.CliDocumentation.curlRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
@@ -49,11 +54,16 @@ public class UserControllerTest extends CustomRestAssured {
     @MockBean
     private UserRepo userRepo;
 
+    @MockBean
+    private CacheService cacheService;
+
     @Test
     public void get_User_Test_Success() {
         List<User> userList = new ArrayList<>();
         userList.add(new User(20, "Thando", "120.0.0.1", "mozilla/firefoz", 100, new Timestamp(1539216000L)));
         Mockito.doReturn(userList).when(userRepo).findUser(anyInt());
+
+        Mockito.doReturn(new GetAllUsersResponse()).when(cacheService).putUsers(anyString(), any(GetAllUsersResponse.class));
 
         given(spec)
             .filter(

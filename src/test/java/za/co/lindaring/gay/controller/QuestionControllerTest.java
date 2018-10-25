@@ -14,14 +14,18 @@ import org.springframework.http.MediaType;
 import org.springframework.test.context.ActiveProfiles;
 import org.springframework.test.context.junit4.SpringRunner;
 import za.co.lindaring.gay.config.CustomRestAssured;
+import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.repo.QuestionRepo;
 import za.co.lindaring.gay.repo.model.Question;
+import za.co.lindaring.gay.service.CacheService;
 
 import java.util.ArrayList;
 import java.util.List;
 
 import static io.restassured.RestAssured.given;
+import static org.mockito.ArgumentMatchers.any;
 import static org.mockito.ArgumentMatchers.anyInt;
+import static org.mockito.ArgumentMatchers.anyString;
 import static org.springframework.restdocs.cli.CliDocumentation.curlRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpRequest;
 import static org.springframework.restdocs.http.HttpDocumentation.httpResponse;
@@ -47,12 +51,17 @@ public class QuestionControllerTest extends CustomRestAssured {
 	@MockBean
 	private QuestionRepo questionRepo;
 
+	@MockBean
+	private CacheService cacheService;
+
 	@Test
-	public void get_Definition_Test_Success() {
+	public void get_Questions_Test_Success() {
 		List<Question> questionList = new ArrayList<>();
 		questionList.add(new Question(1, "Question 1 desc", "location/1",
 				1, "Answer 1 desc", "location/2"));
 		Mockito.doReturn(questionList).when(questionRepo).findQuestions(anyInt());
+
+		Mockito.doReturn(new GetQuestionsReponse()).when(cacheService).putQuestions(anyString(), any(GetQuestionsReponse.class));
 
 		given(spec)
 			.filter(

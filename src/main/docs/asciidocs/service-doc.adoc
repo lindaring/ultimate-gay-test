@@ -20,7 +20,7 @@ http://localhost:8181/swagger-ui.html
 === Get Questions
 Retrieves a few random questions.
 
-operation::get_Definition_Test_Success[]
+operation::get_Questions_Test_Success[]
 
 == Answers Rest
 
