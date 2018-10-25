@@ -5,11 +5,13 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.exception.UserNotFoundException;
+import za.co.lindaring.gay.model.GetAllUsersResponse;
 import za.co.lindaring.gay.model.GetUserResponse;
 import za.co.lindaring.gay.prop.MessageProperties;
 import za.co.lindaring.gay.repo.UserRepo;
 import za.co.lindaring.gay.repo.model.User;
 
+import java.util.ArrayList;
 import java.util.List;
 
 @Slf4j
@@ -48,7 +50,7 @@ public class UserService {
     public GetUserResponse getUser(int id) throws TechnicalException, UserNotFoundException {
         try {
             List<User> userList = userRepo.findUser(id);
-            log.debug("{} saved successfully.", userList.size());
+            log.debug("{} user retrieved array size.", userList.size());
             User user = userList.stream().findFirst().orElse(null);
 
             if (user == null)
@@ -60,6 +62,41 @@ public class UserService {
                     .score(user.getScore())
                     .visited(user.getVisited().toLocalDateTime().toLocalDate())
                     .build();
+
+        } catch (UserNotFoundException e)  {
+            throw e;
+
+        } catch (Exception e) {
+            log.error(e.getMessage(), e);
+            throw new TechnicalException();
+        }
+    }
+
+    /**
+     * Get all users.
+     * @return the users.
+     * @throws UserNotFoundException if users not found in database.
+     * @throws TechnicalException for any other failures.
+     */
+    public GetAllUsersResponse getAllUsers() throws TechnicalException, UserNotFoundException {
+        try {
+            List<User> userList = userRepo.findAllUsers();
+            log.debug("{} users retrieved array size.", userList.size());
+
+            if (userList.isEmpty())
+                throw new UserNotFoundException();
+
+            List<GetUserResponse> userResponseList = new ArrayList<>();
+            userList.forEach(x ->
+                userResponseList.add(
+                    GetUserResponse.builder()
+                            .id(x.getId())
+                            .name(x.getName())
+                            .score(x.getScore())
+                            .visited(x.getVisited().toLocalDateTime().toLocalDate())
+                            .build())
+            );
+            return new GetAllUsersResponse(userResponseList);
 
         } catch (UserNotFoundException e)  {
             throw e;

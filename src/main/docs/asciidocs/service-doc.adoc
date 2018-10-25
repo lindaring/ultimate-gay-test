@@ -1,7 +1,7 @@
 = ultimate-gay-test
 :toc: left
-:toclevels: 2
-:sectums:
+:toclevels: 3
+:sectnums:
 :imagesdir: images
 
 
@@ -15,17 +15,31 @@ image:flowchart.png[]
 == Swagger
 http://localhost:8181/swagger-ui.html
 
-== Question Rest Controller
+== Questions Rest
 
 === Get Questions
 Retrieves a few random questions.
 
 operation::get_Definition_Test_Success[]
 
+== Answers Rest
+
 === Submit Answers
 Submit the users answers.
 
 operation::submit_Answer_Test_Success[]
+
+== Users Rest
+
+=== Get Specific User
+Retrieve user's gay score and information.
+
+operation::get_User_Test_Success[]
+
+=== Get All Users
+Retrieve all user's gay scores and information.
+
+operation::get_All_Users_Test_Success[]
 
 == Database
 

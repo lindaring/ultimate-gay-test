@@ -51,4 +51,18 @@ public class UserRepo {
         );
     }
 
+    public List<User> findAllUsers() {
+        return jdbcTemplate.query(
+                sqlProperties.getAllUsers(),
+                (rs, rowNum) -> User.builder()
+                        .id(rs.getInt("id"))
+                        .name(rs.getString("name"))
+                        .ip(rs.getString("ip"))
+                        .userAgent(rs.getString("user_agent"))
+                        .score(rs.getInt("score"))
+                        .visited(rs.getTimestamp("visited"))
+                        .build()
+        );
+    }
+
 }
