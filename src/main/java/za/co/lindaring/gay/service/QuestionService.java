@@ -7,7 +7,6 @@ import org.springframework.util.StringUtils;
 import za.co.lindaring.gay.exception.QuestionNotFoundException;
 import za.co.lindaring.gay.exception.TechnicalException;
 import za.co.lindaring.gay.model.AnswerResponse;
-import za.co.lindaring.gay.model.GetAllUsersResponse;
 import za.co.lindaring.gay.model.GetQuestionsReponse;
 import za.co.lindaring.gay.model.QuestionResponse;
 import za.co.lindaring.gay.repo.QuestionRepo;
@@ -21,7 +20,7 @@ import java.util.Optional;
 @Service
 public class QuestionService {
 
-    private final String ALL_QUESTIONS = "ALL_QUESTIONS";
+    private static final String ALL_QUESTIONS = "ALL_QUESTIONS";
 
     @Autowired
     private QuestionRepo questionRepo;
@@ -32,18 +31,19 @@ public class QuestionService {
     /**
      * Get a list of questions and related answers.
      *
-     * @param limit max questions that must be returned.
+     * @param from the start point.
+     * @param to the to point.
      * @return list of questions.
      */
-    public GetQuestionsReponse getQuestions(int limit) throws QuestionNotFoundException, TechnicalException {
+    public GetQuestionsReponse getQuestions(int from, int to) throws QuestionNotFoundException, TechnicalException {
         try {
-            Optional<GetQuestionsReponse> responseOptional = cacheService.getQuestions(ALL_QUESTIONS);
+            Optional<GetQuestionsReponse> responseOptional = cacheService.getQuestions(getKey(from, to));
             if (responseOptional.isPresent()) {
                 log.debug("Questions retrieved from cache.");
                 return responseOptional.get();
             }
 
-            List<Question> questionAnswerList = questionRepo.findQuestions(limit);
+            List<Question> questionAnswerList = questionRepo.findQuestions(from, to);
             log.debug("getQuestion :: questionList :: size={}", questionAnswerList.size());
 
             if (questionAnswerList.isEmpty())
@@ -64,7 +64,7 @@ public class QuestionService {
             });
 
             GetQuestionsReponse response = new GetQuestionsReponse(questionResponseList);
-            cacheService.putQuestions(ALL_QUESTIONS, response);
+            cacheService.putQuestions(getKey(from, to), response);
             log.debug("getQuestion :: mapped question={}", questionResponseList);
             return response;
 
@@ -111,6 +111,11 @@ public class QuestionService {
                 .build();
 
         questionResponseList.add(questionResponse);
+    }
+
+    private String getKey(int from, int to) {
+        //Cache question from a range. If different range supplied, get fresh list.
+        return ALL_QUESTIONS + "_" + from + "_" + to;
     }
 
 }

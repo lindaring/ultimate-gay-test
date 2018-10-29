@@ -17,8 +17,8 @@ public class QuestionRepo {
     @Autowired
     private SqlProperties sqlProperties;
 
-    public List<Question> findQuestions(int limit) {
-        String sql = String.format(sqlProperties.getQuestionsAndAnswers(), limit);
+    public List<Question> findQuestions(int start, int end) {
+        String sql = formatQuery(sqlProperties.getQuestionsAndAnswers(), start, end);
         return jdbcTemplate.query(
                 sql,
                 (rs, rowNum) -> Question.builder()
@@ -30,6 +30,13 @@ public class QuestionRepo {
                                         .answerBackground(rs.getString("answer_pic"))
                                         .build()
         );
+    }
+
+    private String formatQuery(String query, int start, int end) {
+        if (start >= 0 && end > 0) {
+            return String.format("%s LIMIT %d, %d", query, start, end);
+        }
+        return query;
     }
 
 }

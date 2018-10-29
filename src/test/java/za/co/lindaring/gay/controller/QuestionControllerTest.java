@@ -59,7 +59,7 @@ public class QuestionControllerTest extends CustomRestAssured {
 		List<Question> questionList = new ArrayList<>();
 		questionList.add(new Question(1, "Question 1 desc", "location/1",
 				1, "Answer 1 desc", "location/2"));
-		Mockito.doReturn(questionList).when(questionRepo).findQuestions(anyInt());
+		Mockito.doReturn(questionList).when(questionRepo).findQuestions(anyInt(), anyInt());
 
 		Mockito.doReturn(new GetQuestionsReponse()).when(cacheService).putQuestions(anyString(), any(GetQuestionsReponse.class));
 
